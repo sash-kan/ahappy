@@ -13,11 +13,8 @@ LANG=C
 # length of alphabet
 abclen=${#abc}
 
-while true; do
-  read -r -s -p "enter phrase (empty line to quit): " phrase
-  echo
-  # empty input -> exit
-  [ -n "$phrase" ] || exit 0
+do_work() {
+  local phrase=$1
   # length of phrase
   phraselen=${#phrase}
   # get ord values of characters in phrase
@@ -42,4 +39,17 @@ while true; do
   # if phrase="12345", we get "<>/lFz"
   # cool, huh?
   eval echo "$result"
+}
+
+read_input() {
+  read -r -s -p "enter phrase (empty line to quit): " p
+  echo
+  # empty input -> exit
+  [ -n "$p" ] || return
+  do_work $p
+}
+
+while true; do
+  # empty input -> exit
+  read_input || exit 0
 done
