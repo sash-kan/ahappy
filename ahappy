@@ -43,13 +43,33 @@ do_work() {
 
 read_input() {
   read -r -s -p "enter phrase (empty line to quit): " p
-  echo
   # empty input -> exit
   [ -n "$p" ] || return
   do_work $p
 }
 
-while true; do
-  # empty input -> exit
-  read_input || exit 0
-done
+run_xclip() {
+  $xclip -in -selection clipboard
+}
+
+interactive_loop() {
+  while true; do
+    # empty input -> exit
+    r=$(read_input) || { echo; return 0; }
+    echo
+    echo $r
+  done
+}
+
+if [ "$#" == 1 -a "$1" == "-i" ]; then
+  interactive_loop
+else
+  xclip=$(type -P xclip)
+  r=$?
+  [ "$r" == 0 ] || { echo "you request to put result into x clipboard. but xclip not found"; exit $r; }
+  p=$(read_input) || { echo; exit 0; }
+  echo
+  echo -n "$p" | run_xclip
+  [ "$?" == 0 ] && { echo "the password is saved into x clipboard"; exit 0; }
+fi
+
