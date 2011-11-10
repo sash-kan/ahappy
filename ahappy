@@ -1,0 +1,9 @@
+#!/bin/bash
+chars="!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_\`abcdefghijklmnopqrstuvwxyz{|}~"
+
+while true; do
+	read -s -p "enter phrase (empty line to quit): " phrase
+	echo
+	[ -n "$phrase" ] || exit 0
+	echo $phrase
+done
