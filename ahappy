@@ -1,9 +1,45 @@
 #!/bin/bash
-chars="!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_\`abcdefghijklmnopqrstuvwxyz{|}~"
+# vim: ts=2 sw=2 et
+
+# our alphabet
+abc='!"#$%&'\''()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_\`abcdefghijklmnopqrstuvwxyz{|}~'
+
+# read and apply rcfile
+[ -f ~/.ahappyrc ] && . ~/.ahappyrc
+
+# interpret multibyte characters as a sequence of bytes, not characters
+LANG=C
+
+# length of alphabet
+abclen=${#abc}
 
 while true; do
-	read -s -p "enter phrase (empty line to quit): " phrase
-	echo
-	[ -n "$phrase" ] || exit 0
-	echo $phrase
+  read -r -s -p "enter phrase (empty line to quit): " phrase
+  echo
+  # empty input -> exit
+  [ -n "$phrase" ] || exit 0
+  # length of phrase
+  phraselen=${#phrase}
+  # get ord values of characters in phrase
+  p=$(eval "$(echo "$phrase" | sed 's/[^\]/printf "%d " "'\''&";/g;s/\\/printf "%d " "'\''\\\\";/g')")
+  for i in $(seq 2 $phraselen); do
+    p=$(echo $p | sed -r 's/ ([^ ]+)$/)*256+\1/g;s/^/(/')
+  done
+
+  # now $p looks like "((((49)*256+50)*256+51)*256+52)*256+53" (if phrase="12345")
+  #debug: echo $p
+
+  # get sequence of numbers like "27 29 14 76 37 90" (if phrase="12345")
+  numbers=$(echo "obase=${abclen};$p" | bc | sed -n 's/\\$//;H;${g;s/\n//g;p}')
+  #debug:echo $numbers
+  # treat this numbers as indexes in $abc
+  result=$(echo $numbers | sed -r 's/0*([0-9]+)/${abc:\1:1}/g;s/ //g')
+  # $result looks like:
+  # ${abc:27:1}${abc:29:1}${abc:14:1}${abc:76:1}${abc:37:1}${abc:90:1}
+  #debug: echo $result
+
+  # eval this!
+  # if phrase="12345", we get "<>/lFz"
+  # cool, huh?
+  eval echo "$result"
 done
