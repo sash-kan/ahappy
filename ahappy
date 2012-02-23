@@ -8,7 +8,7 @@ abc='!"#$%&'\''()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_\`abcdefg
 [ -f ~/.ahappyrc ] && . ~/.ahappyrc
 
 # interpret multibyte characters as a sequence of bytes, not characters
-LANG=C
+export LC_ALL=C
 
 # length of alphabet
 abclen=${#abc}
