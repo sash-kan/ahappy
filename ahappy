@@ -1,6 +1,14 @@
 #!/bin/bash
 # vim: ts=2 sw=2 et
 
+# ahappy = administrator happy (generate good passwords)
+# copyright (c) 2011,2012 alexander barakin aka sash-kan
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
 # our alphabet
 abc='!"#$%&'\''()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_\`abcdefghijklmnopqrstuvwxyz{|}~'
 
